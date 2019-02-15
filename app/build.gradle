@@ -16,8 +16,8 @@ def git = org.ajoberstar.grgit.Grgit.open(file('..'))
 ext.revision = git.head().getAbbreviatedId(7)
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "25.0.1"
+    compileSdkVersion 28
+    buildToolsVersion "25.0.3"
 
     externalNativeBuild {
         /*ndkBuild {
@@ -31,7 +31,7 @@ android {
     defaultConfig {
         applicationId "org.libsdl.openxcom"
         minSdkVersion 10
-        targetSdkVersion 23
+        targetSdkVersion 28
 
         externalNativeBuild {
             /*ndkBuild {
