@@ -17,7 +17,7 @@ ext.revision = git.head().getAbbreviatedId(7)
 
 android {
     compileSdkVersion 28
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "28.0.3"
 
     externalNativeBuild {
         /*ndkBuild {
