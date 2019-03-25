@@ -44,22 +44,19 @@ set(SDL2_MIXER_SOURCES
     ${SDL2_MIXER_OGG_FILES}
 )
 
-add_library(SDL2_mixer
-            STATIC
-            ${SDL2_MIXER_SOURCES})
+add_library(SDL2_mixer STATIC ${SDL2_MIXER_SOURCES})
 
-target_link_libraries(SDL2_mixer
-    SDL2)
+target_link_libraries(SDL2_mixer SDL2)
 
-target_include_directories(SDL2_mixer PUBLIC
-        SDL2_mixer)
-
+target_include_directories(SDL2_mixer PUBLIC SDL2_mixer)
 target_include_directories(SDL2_mixer PRIVATE
-        SDL2_mixer/external/libvorbisidec-1.2.1
-        SDL2_mixer/external/libogg-1.3.2/include)
+    SDL2_mixer/external/libvorbisidec-1.2.1
+    SDL2_mixer/external/libogg-1.3.2/include
+)
 
 set_target_properties(SDL2_mixer
     PROPERTIES
     COMPILE_FLAGS
-    "-DOGG_MUSIC -DOGG_USE_TREMOR\
-    -DWAV_MUSIC")
+    "-DMUSIC_OGG -DOGG_HEADER=\"<ivorbisfile.h>\" -DOGG_USE_TREMOR\
+     -DMUSIC_WAV \
+    ")
