@@ -33,7 +33,7 @@ android {
             cmake {
                 arguments "-DANDROID_STL=c++_static", "-DANDROID_ARM_MODE=arm", "-DOPENXCOM_VERSION_STRING=${project.revision}"
                 abiFilters "armeabi-v7a", "x86", "x86_64", "arm64-v8a"
-                cppFlags "-std=c++11", "-fexceptions", "-frtti"
+                cppFlags "-std=c++17", "-fexceptions", "-frtti"
             }
         }
     }
