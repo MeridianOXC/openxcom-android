@@ -45,7 +45,7 @@
     <string name="dirs_copying">"Копирование "</string>
     <string name="dirs_install_from_dir">Скопировать UFO из папки…</string>
     <string name="dirs_install_from_dir_xcom2">Скопировать TFTD из папки…</string>
-    <string name="preloader_title">Предзагрузка OpenXcom 1.0…</string>
+    <string name="preloader_title">Предзагрузка OpenXcom Extended…</string>
     <string name="preloader_init">Инициализация…</string>
     <string name="preloader_assets_gen">Создание перечня архивов…</string>
     <string name="preloader_extracting">"Распаковка "</string>

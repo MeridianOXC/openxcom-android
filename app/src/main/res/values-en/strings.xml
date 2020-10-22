@@ -45,7 +45,7 @@
     <string name="dirs_copying">"Copying "</string>
     <string name="dirs_install_from_dir">Copy UFO data from directory…</string>
     <string name="dirs_install_from_dir_xcom2">Copy TFTD data from directory…</string>
-    <string name="preloader_title">Pre-loading OpenXcom 1.0…</string>
+    <string name="preloader_title">Pre-loading OpenXcom Extended…</string>
     <string name="preloader_init">Initializing…</string>
     <string name="preloader_assets_gen">Generating a list of assets…</string>
     <string name="preloader_extracting">"Extracting "</string>
