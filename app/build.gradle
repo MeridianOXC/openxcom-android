@@ -82,6 +82,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    compileOptions {
+        sourceCompatibility revision
+        targetCompatibility revision
+    }
+    dependenciesInfo {
+        includeInApk true
+        includeInBundle true
+    }
+    buildToolsVersion '30.0.2'
+    ndkVersion '18.1.5063045'
 }
 
 def getFolder(resource) {
@@ -98,7 +108,6 @@ task packBin(description: 'Update data files.') {
         zip.archiveName = index.toString() + "_" + res + '.zip'
         zip.from getFolder(res)
         zip.into res
-        zip.execute()
         index++;
     }
     def zipTranslations = task("zipTranslations", type: Zip)
@@ -106,7 +115,6 @@ task packBin(description: 'Update data files.') {
     zipTranslations.destinationDir = file('src/main/assets')
     zipTranslations.archiveName = '7_translations.zip'
     zipTranslations.from getFolder('translations/output')
-    zipTranslations.execute()
 }
 
 gradle.projectsEvaluated {
