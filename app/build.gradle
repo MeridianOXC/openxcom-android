@@ -91,7 +91,7 @@ android {
         includeInBundle true
     }
     buildToolsVersion '30.0.2'
-    ndkVersion '18.1.5063045'
+    ndkVersion '23.1.7779620'
 }
 
 def getFolder(resource) {
