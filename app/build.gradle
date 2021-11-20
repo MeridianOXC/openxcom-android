@@ -95,26 +95,29 @@ android {
 }
 
 def getFolder(resource) {
-    def binDir = file('src/main/jni/OpenXcom/bin/' + resource);
-    return binDir;
+    def binDir = file('src/main/jni/OpenXcom/bin/' + resource)
+    return binDir
 }
 
 task packBin(description: 'Update data files.') {
-    def index = 0;
+    def index = 0
     ['common', 'standard', 'UFO', 'TFTD'].each { String res ->
-        def zip = task("zip" + res, type: Zip)
-        zip.doFirst { println('Packing ' + res + '...') }
-        zip.destinationDir = file('src/main/assets')
-        zip.archiveName = index.toString() + "_" + res + '.zip'
-        zip.from getFolder(res)
-        zip.into res
-        index++;
+        tasks.register('zip' + res, Zip) {
+            doFirst { println('Packing ' + res + '...') }
+            archiveFileName = index.toString() + '_' + res + '.zip'
+            destinationDirectory = file('src/main/assets')
+            from getFolder(res)
+        }
+        dependsOn(tasks.getByName('zip' + res))
+        ++index
     }
-    def zipTranslations = task("zipTranslations", type: Zip)
-    zipTranslations.doFirst { println('Packing translations...' )}
-    zipTranslations.destinationDir = file('src/main/assets')
-    zipTranslations.archiveName = '7_translations.zip'
-    zipTranslations.from getFolder('translations/output')
+    tasks.register('zipTranslations', Zip) {
+        doFirst { println('Packing translations...' ) }
+        archiveFileName = '7_translations.zip'
+        destinationDirectory = file('src/main/assets')
+        from getFolder('translations/output')
+    }
+    dependsOn(tasks.getByName('zipTranslations'))
 }
 
 gradle.projectsEvaluated {
