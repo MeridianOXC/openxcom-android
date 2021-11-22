@@ -107,6 +107,7 @@ task packBin(description: 'Update data files.') {
             archiveFileName = index.toString() + '_' + res + '.zip'
             destinationDirectory = file('src/main/assets')
             from getFolder(res)
+            into res
         }
         dependsOn(tasks.getByName('zip' + res))
         ++index
