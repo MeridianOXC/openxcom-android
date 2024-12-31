@@ -18,9 +18,11 @@ include(deps_cmake/sdl.cmake)
 include(deps_cmake/sdl2_image.cmake)
 include(deps_cmake/sdl2_mixer.cmake)
 include(deps_cmake/sdl_gfx.cmake)
-include(deps_cmake/yaml-cpp.cmake)
 
 project(OPENXCOM CXX)
+
+# Include rapidyaml lib
+include_directories ( "OpenXcom/libs/rapidyaml" )
 
 #file(GLOB OPENXCOM_FILES_BASE
 #    OpenXcom/src/*.cpp)
@@ -60,6 +62,11 @@ file(GLOB OPENXCOM_FILES_SAVEGAME
 file(GLOB OPENXCOM_FILES_UFOPAEDIA
     OpenXcom/src/Ufopaedia/*.cpp)
 
+file(GLOB OPENXCOM_FILES_RYML
+    OpenXcom/libs/rapidyaml/c4/*.cpp
+    OpenXcom/libs/rapidyaml/c4/yml/*.cpp
+	)
+
 set(OPENXCOM_SOURCES
     ${OPENXCOM_FILES_BASE}
     ${OPENXCOM_FILES_BASESCAPE}
@@ -71,6 +78,7 @@ set(OPENXCOM_SOURCES
     ${OPENXCOM_FILES_MOD}
     ${OPENXCOM_FILES_SAVEGAME}
     ${OPENXCOM_FILES_UFOPAEDIA}
+    ${OPENXCOM_FILES_RYML}
     )
 
 add_library(openxcom
@@ -95,7 +103,6 @@ target_link_libraries(openxcom
     SDL2_image
     SDL2_mixer
     SDL_gfx
-    YAML_CPP
     ${EGL_LIB}
     ${LOG_LIB}
     ${GLESv2_LIB}
