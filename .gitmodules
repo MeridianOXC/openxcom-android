@@ -10,9 +10,6 @@
 [submodule "app/src/main/jni/SDL_gfx"]
 	path = app/src/main/jni/SDL_gfx
 	url = https://github.com/StoddardOXC/SDL_gfx_SDL2
-[submodule "app/src/main/jni/yaml-cpp"]
-	path = app/src/main/jni/yaml-cpp
-	url = https://github.com/jbeder/yaml-cpp
 [submodule "app/src/main/jni/OpenXcom"]
 	path = app/src/main/jni/OpenXcom
 	url = https://github.com/MeridianOXC/OpenXcom
