@@ -35,6 +35,18 @@ app/.externalNativeBuild/
 app/src/main/obj/
 app/src/main/libs/
 
+# IDE generated files
+.idea/caches/
+.idea/deploymentTargetSelector.xml
+.idea/deviceManager.xml
+.idea/workspace.xml
+
+# CMake build output
+app/.cxx/
+
+# Gradle local properties
+gradle.properties
+
 #auto-generated files
 app/src/main/assets/3_TFTD.zip.MD5
 app/src/main/assets/7_translations.zip
