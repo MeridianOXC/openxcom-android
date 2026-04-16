@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/app/src/main/jni/OpenXcom" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/app/src/main/jni/SDL" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/app/src/main/jni/SDL2_image" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/app/src/main/jni/SDL2_mixer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/app/src/main/jni/SDL_gfx" vcs="Git" />
   </component>
 </project>
