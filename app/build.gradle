@@ -12,11 +12,17 @@ if (file('signing.gradle').exists()) {
     apply from: 'signing.gradle'
 }
 
-def git = org.ajoberstar.grgit.Grgit.open(file('..'))
-ext.revision = git.head().getAbbreviatedId(7)
+def getRevision() {
+    def proc = ['git', 'rev-parse', '--short=7', 'HEAD'].execute(null, rootDir)
+    proc.waitFor()
+    return proc.text.trim()
+}
+ext.revision = getRevision()
 
 android {
-    compileSdkVersion 28
+    namespace "org.openxcom.extended"
+    compileSdk 28
+    ndkVersion "25.1.8937393"
 
     externalNativeBuild {
         cmake {
@@ -26,8 +32,10 @@ android {
 
     defaultConfig {
         applicationId "org.libsdl.openxcom"
-        minSdkVersion 10
-        targetSdkVersion 28
+        minSdk 21
+        targetSdk 28
+        versionCode 1
+        versionName "1.0"
 
         externalNativeBuild {
             cmake {
@@ -45,14 +53,6 @@ android {
                 storePassword project.signing.storePassword
                 keyAlias project.signing.keyAlias
                 keyPassword project.signing.keyPassword
-
-                applicationVariants.all { variant ->
-                    variant.outputs.each { output ->
-                        output.outputFile = new File(output.outputFile.parent,
-                                    output.outputFile.name.replace("app-release",
-                                        "OpenXcom-v1.0-g${project.revision}"))
-                    }
-                }
             }
         }
         buildTypes {
@@ -63,17 +63,16 @@ android {
                         cFlags "-O3", "-ffast-math"
                         cppFlags "-O3", "-ffast-math"
                     }
-
                 }
             }
         }
-    }
-
-    tasks.withType(Zip) {
-        task ->
-            task.doLast {
-                ant.checksum file: it.archivePath, algorithm: "MD5"
+        applicationVariants.all { variant ->
+            variant.outputs.all {
+                if (outputFileName.endsWith('.apk')) {
+                    outputFileName = outputFileName.replace("app-release", "OpenXcom-v1.0-g${project.revision}")
+                }
             }
+        }
     }
 
     buildTypes {
@@ -82,33 +81,47 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    lint {
+        checkReleaseBuilds false
+    }
 }
 
 def getFolder(resource) {
-    def binDir = file('src/main/jni/OpenXcom/bin/' + resource);
-    return binDir;
+    return file('src/main/jni/OpenXcom/bin/' + resource)
 }
 
-task packBin(description: 'Update data files.') {
-    def index = 0;
-    ['common', 'standard', 'UFO', 'TFTD'].each { String res ->
-        def zip = task("zip" + res, type: Zip)
-        zip.doFirst { println('Packing ' + res + '...') }
-        zip.destinationDir = file('src/main/assets')
-        zip.archiveName = index.toString() + "_" + res + '.zip'
-        zip.from getFolder(res)
-        zip.into res
-        zip.execute()
-        index++;
+['common', 'standard', 'UFO', 'TFTD'].eachWithIndex { String res, int index ->
+    tasks.register("zip${res}", Zip) {
+        destinationDirectory = file('src/main/assets')
+        archiveFileName = "${index}_${res}.zip"
+        from getFolder(res)
+        into res
+        doFirst { println("Packing ${res}...") }
     }
-    def zipTranslations = task("zipTranslations", type: Zip)
-    zipTranslations.doFirst { println('Packing translations...' )}
-    zipTranslations.destinationDir = file('src/main/assets')
-    zipTranslations.archiveName = '7_translations.zip'
-    zipTranslations.from getFolder('translations/output')
-    zipTranslations.execute()
 }
 
-gradle.projectsEvaluated {
-    preBuild.dependsOn packBin
+tasks.register('zipTranslations', Zip) {
+    destinationDirectory = file('src/main/assets')
+    archiveFileName = '7_translations.zip'
+    from getFolder('translations/output')
+    into 'translations'
+    doFirst { println('Packing translations...') }
+}
+
+tasks.register('packBin') {
+    description = 'Update data files.'
+    dependsOn 'zipcommon', 'zipstandard', 'zipUFO', 'zipTFTD', 'zipTranslations'
+}
+
+tasks.withType(Zip).configureEach {
+    doLast {
+        ant.checksum file: archiveFile.get().asFile, algorithm: 'MD5'
+    }
+}
+
+afterEvaluate {
+    tasks.named('preBuild') {
+        dependsOn('packBin')
+    }
 }
