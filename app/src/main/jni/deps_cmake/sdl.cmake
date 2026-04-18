@@ -138,3 +138,8 @@ target_include_directories(SDL2 PUBLIC
         SDL/include)
 
 set_target_properties(SDL2 PROPERTIES COMPILE_FLAGS "-DGL_GLEXT_PROTOTYPES")
+
+# NDK r28+ treats -Wincompatible-function-pointer-types as an error. SDL2's
+# OpenGL ES2 function table uses non-const pointer types that differ from the
+# system headers by a const qualifier. Suppress the error for this SDL target.
+target_compile_options(SDL2 PRIVATE -Wno-incompatible-function-pointer-types)
