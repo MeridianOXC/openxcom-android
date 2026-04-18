@@ -88,6 +88,12 @@ add_library(openxcom
 
 set_source_files_properties(OpenXcom/libs/miniz/miniz.c PROPERTIES COMPILE_FLAGS -DMINIZ_NO_STDIO)
 
+# libc++ 18 (NDK r27+) removed char_traits<signed char> and char_traits<unsigned int>.
+# Force-include a compatibility shim that restores them for all C++ translation units.
+target_compile_options(openxcom PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:-include ${CMAKE_CURRENT_SOURCE_DIR}/libcxx18_char_traits_compat.h>
+)
+
 find_library(EGL_LIB EGL)
 find_library(LOG_LIB log)
 find_library(GLESv2_LIB GLESv2)
