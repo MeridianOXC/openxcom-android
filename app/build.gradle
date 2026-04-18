@@ -22,7 +22,7 @@ ext.revision = getRevision()
 android {
     namespace "org.openxcom.extended"
     compileSdk 28
-    ndkVersion "25.1.8937393"
+    ndkVersion "30.0.14904198"
 
     externalNativeBuild {
         cmake {
