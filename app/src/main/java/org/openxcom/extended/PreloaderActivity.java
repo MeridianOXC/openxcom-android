@@ -17,9 +17,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -48,12 +51,14 @@ public class PreloaderActivity extends Activity {
 		context = this;
 		preloaderLog = (TextView) findViewById(R.id.preloaderLog);
 		assets = getAssets();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            hasWritePermission = true;
-        } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            hasWritePermission = Environment.isExternalStorageManager();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             hasWritePermission =
                     checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                             PackageManager.PERMISSION_GRANTED;
+        } else {
+            hasWritePermission = true;
         }
 	}
 	
@@ -72,11 +77,31 @@ public class PreloaderActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !hasWritePermission) {
-            requestWriteStorage();
+        if (!hasWritePermission) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                requestAllFilesAccess();
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestWriteStorage();
+            }
         } else {
             unpackData();
         }
+    }
+
+    @TargetApi(30)
+    private void requestAllFilesAccess() {
+        new AlertDialog.Builder(this)
+                .setTitle("Permission required")
+                .setMessage("This game stores its data on external storage. " +
+                        "Please grant 'All files access' on the next screen.")
+                .setPositiveButton("Open Settings", (d, i) -> {
+                    Intent intent = new Intent(
+                            Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                            Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, REQUEST_WRITE_STORAGE);
+                })
+                .setCancelable(false)
+                .show();
     }
 
     @TargetApi(23)
@@ -85,6 +110,19 @@ public class PreloaderActivity extends Activity {
         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 REQUEST_WRITE_STORAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_WRITE_STORAGE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            hasWritePermission = Environment.isExternalStorageManager();
+            if (hasWritePermission) {
+                unpackData();
+            } else {
+                requestAllFilesAccess();
+            }
+        }
     }
 
     @TargetApi(23)
