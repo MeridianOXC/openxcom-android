@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 
 /**
  * A Runnable to perform actual UI changes; most code moved here from OpenXcom.java clusterfuck.
@@ -22,6 +24,7 @@ public class UiVisibilityChanger implements Runnable {
 	private final static int SYSTEM_UI_IMMERSIVE = 2;
 
 	private int mUiVisibilityFlags = 0;
+	private int mUiStyle = SYSTEM_UI_ALWAYS_SHOWN;
 	private View mRootView = null;
 	private Activity mActivity;
 	
@@ -60,6 +63,7 @@ public class UiVisibilityChanger implements Runnable {
 			if (version < 11) {
 				throw new Exception("System version is too low!");
 			}
+			mUiStyle = style;
 			switch(style) {
 				case SYSTEM_UI_ALWAYS_SHOWN:
 					if (version < 14) {
@@ -105,8 +109,9 @@ public class UiVisibilityChanger implements Runnable {
     @SuppressWarnings("deprecated")
 	@Override
 	public void run() {
-		if (Build.VERSION.SDK_INT > 10)
-		{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			applyModernWindowInsets();
+		} else if (Build.VERSION.SDK_INT > 10) {
 			mRootView.setSystemUiVisibility(mUiVisibilityFlags);
 			if ((mUiVisibilityFlags & (View.STATUS_BAR_HIDDEN | View.SYSTEM_UI_FLAG_LOW_PROFILE)) != 0) {
 				uiVisibilityChangeListener l = new uiVisibilityChangeListener(mActivity, mUiVisibilityFlags);
@@ -115,7 +120,20 @@ public class UiVisibilityChanger implements Runnable {
 				mRootView.setOnSystemUiVisibilityChangeListener(null);
 			}
 		}
-		
+	}
+
+	@TargetApi(30)
+	private void applyModernWindowInsets() {
+		// Android 15 (targetSdk >= 35) enforces edge-to-edge and ignores
+		// Theme.NoTitleBar.Fullscreen. OpenXcom is always a fullscreen game,
+		// so always hide system bars. The mUiStyle value only governs whether
+		// bars can be revealed transiently by a swipe.
+		mActivity.getWindow().setDecorFitsSystemWindows(false);
+		WindowInsetsController controller = mActivity.getWindow().getInsetsController();
+		if (controller == null) return;
+		controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+		controller.setSystemBarsBehavior(
+				WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
 	}
 
 }
