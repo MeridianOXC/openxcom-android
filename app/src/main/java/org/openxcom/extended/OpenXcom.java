@@ -108,6 +108,12 @@ public class OpenXcom extends SDLActivity {
 	public static native void nativeSetPaths(String dataPath, String savePath, String confPath);
 
 	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		if (hasFocus) setSystemUI();
+	}
+
+	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 			newConfig.orientation = Configuration.ORIENTATION_LANDSCAPE;
