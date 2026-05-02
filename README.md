@@ -61,9 +61,6 @@ countries and should only be used for debugging purposes.
 
 The following NDK-level compatibility shims are in place (see commit history for details):
 
-- **libc++ 18 / NDK r27+** — `char_traits<signed char>` and `char_traits<unsigned int>` were
-  removed from libc++ 18. A compat header (`libcxx18_char_traits_compat.h`) is force-included
-  for all C++ translation units.
 - **NDK r28+** — `-Wincompatible-function-pointer-types` is now an error; suppressed for the
   SDL2 target where the GL ES2 function table has a benign const-qualifier mismatch.
 - **NDK r30** — `ALooper_pollAll` was removed; replaced with `ALooper_pollOnce` (identical
@@ -82,4 +79,6 @@ This is a fork of sfalexrog's repository of OpenXcom for Android and most of the
 
 I (Meridian) have only copied and customized his work on this build system.
 
-Many thanks also to Stoddard for helping with all aspects of the project.
+Many thanks also to Stoddard for helping with all aspects of the project (2019).
+
+Many thanks also to robmat for modernising the build system (2026).
