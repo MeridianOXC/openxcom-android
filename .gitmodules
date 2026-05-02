@@ -1,15 +1,15 @@
 [submodule "app/src/main/jni/SDL"]
 	path = app/src/main/jni/SDL
-	url = https://github.com/StoddardOXC/SDL
+	url = https://github.com/MeridianOXC/SDL
 [submodule "app/src/main/jni/SDL2_mixer"]
 	path = app/src/main/jni/SDL2_mixer
-	url = https://github.com/StoddardOXC/SDL2_mixer
+	url = https://github.com/MeridianOXC/SDL2_mixer
 [submodule "app/src/main/jni/SDL2_image"]
 	path = app/src/main/jni/SDL2_image
-	url = https://github.com/StoddardOXC/SDL2_image
+	url = https://github.com/MeridianOXC/SDL2_image
 [submodule "app/src/main/jni/SDL_gfx"]
 	path = app/src/main/jni/SDL_gfx
-	url = https://github.com/StoddardOXC/SDL_gfx_SDL2
+	url = https://github.com/MeridianOXC/SDL_gfx_SDL2
 [submodule "app/src/main/jni/OpenXcom"]
 	path = app/src/main/jni/OpenXcom
 	url = https://github.com/MeridianOXC/OpenXcom
